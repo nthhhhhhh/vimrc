@@ -1,0 +1,2 @@
+# vimrc
+current vim rc  
