@@ -16,7 +16,6 @@ Plug 'airodactyl/neovim-ranger'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'arakashic/chromatica.nvim'
 Plug 'eagletmt/neco-ghc'
-Plug 'timeyyy/orchestra.nvim'
 call plug#end()
 
 " neovim shit
