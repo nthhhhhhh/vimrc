@@ -1,18 +1,39 @@
-execute pathogen#infect()
-syntax on
-filetype plugin on
-filetype plugin indent on
+call plug#begin('~/.vim/plugged')
+Plug 'munshkr/vim-tidal'
+Plug 'vim-scripts/closetag.vim'
+Plug 'keith/swift.vim'
+Plug 'colepeters/spacemacs-theme.vim'
+Plug 'Chiel92/vim-autoformat'
+Plug 'scrooloose/nerdcommenter'
+Plug 'othree/html5.vim'
+Plug 'ElmCast/elm-vim'
+Plug 'jiangmiao/auto-pairs'
+Plug 'sophacles/vim-processing'
+Plug 'neovimhaskell/haskell-vim'
+Plug 'commercialhaskell/hindent'
+Plug 'alx741/vim-hindent'
+Plug 'airodactyl/neovim-ranger'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'arakashic/chromatica.nvim'
+Plug 'eagletmt/neco-ghc'
+Plug 'timeyyy/orchestra.nvim'
+call plug#end()
 
-" rainbow parens
-let g:rainbow_active = 1
+" neovim shit
+let g:python2_host_prog = '/usr/local/bin/python'
+let g:python3_host_prog = '/usr/local/bin/python3'
 
+" Toggle absolute and relative numbering in VIM by insert/normal mode
+set number
+autocmd InsertEnter * :set norelativenumber
+autocmd InsertLeave * :set relativenumber
+
+let mapleader = ','
 set smarttab
 set ruler
 set autoindent
 set smartindent
 set expandtab
-set guifont=Hack-Regular:h12
-set number
 set relativenumber
 set textwidth=80
 set tw=80
@@ -22,120 +43,58 @@ set tabstop=2
 set shiftwidth=2
 set expandtab
 set backspace=indent,eol,start
+set cursorline
 
-" ctags optimization
-set autochdir
-set tags=tags
-
-" fix curly braces
-inoremap {<cr> {<cr>}<c-o><s-o>
-inoremap [<cr> [<cr>]<c-o><s-o>
-inoremap (<cr> (<cr>)<c-o><s-o>)]}
-
-"paper color theme
-set t_Co=256
+colorscheme spacemacs-theme
 set background=dark
-colorscheme PaperColor
 
-"Syntastic
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-let g:syntastic_cpp_include_dirs = ['/Users/joseph/of_v0.9.0RC1_osx_release/libs/*', '/Users/joseph/of_v0.9.0RC1_osx_release/libs/openFrameworks/', '/Users/joseph/of_v0.9.0RC1_osx_release/libs/openFrameworks/utils/', '/Users/joseph/of_v0.9.0RC1_osx_release/libs/glew/include/GL/', '/Users/joseph/Code/Github/openFrameworks090/libs/tess2/include/', '/Users/joseph/of_v0.9.0RC1_osx_release/libs/glew/include/', '/Users/joseph/Code/Github/openFrameworks090/libs/openFrameworks/utils/', '/Users/joseph/of_v0.9.0RC1_osx_release/libs/boost/include/', '/Users/joseph/of_v0.9.0RC1_osx_release/libs/openFrameworks/types/']
+" nerd commenter ------------------------------------------------------------------
+" Add spaces after comment delimiters by default
+let g:NERDSpaceDelims = 1
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_enable_signs=1
-let g:syntastic_cpp_check_header = 0
-let g:syntastic_enable_balloons = 1
+" Allow commenting and inverting empty lines (useful when commenting a region)
+let g:NERDCommentEmptyLines = 1
 
-" Transparency
-if has("gui_macvim")
-    set transparency=10
-    set guioptions-=r
-    set guioptions-=l
-    set guioptions-=L
-    set guioptions-=R
-    set guioptions-=m
-    set guioptions-=T
+" Enable trimming of trailing whitespace when uncommenting
+let g:NERDTrimTrailingWhitespace = 1
+
+" Use compact syntax for prettified multi-line comments
+let g:NERDCompactSexyComs = 1
+
+" Add your own custom formats or override the defaults
+let g:NERDCustomDelimiters = {
+    \ 'haskell': { 'leftAlt': '{-','rightAlt': '-}', 'left': '-- ', 'right': '' },
+\ }
+
+" haskell-vim ------------------------------------------------------------------
+let g:haskell_enable_quantification = 1   " to enable highlighting of `forall`
+let g:haskell_enable_recursivedo = 1      " to enable highlighting of `mdo` and `rec`
+let g:haskell_enable_arrowsyntax = 1      " to enable highlighting of `proc`
+let g:haskell_enable_pattern_synonyms = 1 " to enable highlighting of `pattern`
+let g:haskell_enable_typeroles = 1        " to enable highlighting of type roles
+let g:haskell_enable_static_pointers = 1  " to enable highlighting of `static`
+let g:haskell_backpack = 1                " to enable highlighting of backpack keywords
+
+" Use deoplete. ------------------------------------------------------------------
+let g:deoplete#enable_at_startup = 1
+
+" chromatica ------------------------------------------------------------------
+let g:chromatica#libclang_path='/usr/local/Cellar/llvm/4.0.1/lib/libclang.dylib'
+let g:chromatica#enable_at_startup=1
+let g:chromatica#responsive_mode=1
+
+"Use 24-bit (true-color) mode in Vim/Neovim when outside tmux.
+"If you're using tmux version 2.2 or later, you can remove the outermost $TMUX check and use tmux's 24-bit color support
+"(see < http://sunaku.github.io/tmux-24bit-color.html#usage > for more information.)
+if (empty($TMUX))
+  if (has("nvim"))
+    "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
+    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+  endif
+  "For Neovim > 0.1.5 and Vim > patch 7.4.1799 < https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162 >
+  "Based on Vim patch 7.4.1770 (`guicolors` option) < https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd >
+  " < https://github.com/neovim/neovim/wiki/Following-HEAD#20160511 >
+  if (has("termguicolors"))
+    set termguicolors
+  endif
 endif
-
- imap <D-Up>   <Plug>(macvim-transparency-inc)
- imap <D-Down> <Plug>(macvim-transparency-dec)
-" imap <F10>    <Plug>(macvim-transparency-roll)
-"
-" xmap <D-Up>   <Plug>(macvim-transparency-inc)
-" xmap <D-Down> <Plug>(macvim-transparency-dec)
-" xmap <F10>    <Plug>(macvim-transparency-roll)"
-
-" vim-autoformat
-let g:formatdef_clangformat_objc = '"clang-format -style=file"'
-
-" omnisharp stuff
-let g:OmniSharp_host = "http://localhost:2000"
-let g:OmniSharp_timeout = 1
-let g:syntastic_cs_checkers = ['syntax', 'semantic', 'issues']
-let g:OmniSharp_timeout = 1
-set cmdheight=2
-"don't autoselect first item in omnicomplete, show if only one item (for preview)
-"remove preview if you don't want to see any documentation whatsoever.
-set completeopt=longest,menuone,preview
-"Don't ask to save when changing buffers (i.e. when jumping to a type
-"definition)
-"Move the preview window (code documentation) to the bottom of the screen, so it doesn't move the code!
-"You might also want to look at the echodoc plugin
-set splitbelow
-let g:OmniSharp_selector_ui = 'unite'  " Use unite.vim
-
-augroup omnisharp_commands
-  autocmd!
-  "Set autocomplete function to OmniSharp (if not using YouCompleteMe completion
-  "plugin)
-      autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
-    "Synchronous build (blocks Vim)
-    "autocmd FileType cs nnoremap <F5> :wa!<cr>:OmniSharpBuild<cr>
-    " Builds can also run asynchronously with vim-dispatch installed
-    autocmd FileType cs nnoremap <leader>b :wa!<cr>:OmniSharpBuildAsync<cr>
-    " automatic syntax check on events (TextChanged requires Vim 7.4)
-    autocmd BufEnter,TextChanged,InsertLeave *.cs SyntasticCheck
-
-    " Automatically add new cs files to the nearest project on save
-    autocmd BufWritePost *.cs call OmniSharp#AddToProject()
-
-    "show type information automatically when the cursor stops moving
-    autocmd CursorHold *.cs call OmniSharp#TypeLookupWithoutDocumentation()
-
-    "The following commands are contextual, based on the current cursor position.
-
-    autocmd FileType cs nnoremap gd :OmniSharpGotoDefinition<cr>
-    autocmd FileType cs nnoremap <leader>fi :OmniSharpFindImplementations<cr>
-    autocmd FileType cs nnoremap <leader>ft :OmniSharpFindType<cr>
-    autocmd FileType cs nnoremap <leader>fs :OmniSharpFindSymbol<cr>
-    autocmd FileType cs nnoremap <leader>fu :OmniSharpFindUsages<cr>
-    "finds members in the current buffer
-    autocmd FileType cs nnoremap <leader>fm :OmniSharpFindMembers<cr>
-    " cursor can be anywhere on the line containing an issue
-    autocmd FileType cs nnoremap <leader>x  :OmniSharpFixIssue<cr>
-    autocmd FileType cs nnoremap <leader>fx :OmniSharpFixUsings<cr>
-    autocmd FileType cs nnoremap <leader>tt :OmniSharpTypeLookup<cr>
-    autocmd FileType cs nnoremap <leader>dc :OmniSharpDocumentation<cr>
-    "navigate up by method/property/field
-    autocmd FileType cs nnoremap <C-K> :OmniSharpNavigateUp<cr>
-    "navigate down by method/property/field
-    autocmd FileType cs nnoremap <C-J> :OmniSharpNavigateDown<cr>
-
-augroup END
-
-" this setting controls how long to wait (in ms) before fetching type / symbol information.
-set updatetime=500
-set hidden
-
-" vim airline
-set laststatus=2
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_powerline_fonts = 1
-
-" omnisharp 
-
-
