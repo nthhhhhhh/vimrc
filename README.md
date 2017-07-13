@@ -1,2 +1,2 @@
-# vimrc
-current vim rc  
+# init.vim
+current init.vim  
